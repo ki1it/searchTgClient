@@ -3,5 +3,4 @@
 
 node_modules/
 /.tlg/
-/libtdjson.dylib
 /tlg.log
