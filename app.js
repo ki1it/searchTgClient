@@ -27,6 +27,35 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
+
+const { Client } = require('telegram-client')
+
+
+
+async function main() {
+  const client = new Client({
+    apiId: process.env.apiId,
+    apiHash: process.env.apiHash
+  })
+
+  try {
+    await client.connect('user', process.env.phone)
+
+    client.on('__updateNewMessage', (res) => {
+      if (res.message.chat_id !== process.env.sendTo) {
+        if (res.message.content.text.text.search('Mi 9') !== -1 ||
+            res.message.content.text.text.search('Redmi Note 8 Pro') !== -1) {
+          client.sendMessage(process.env.sendTo, res.message.content.text.text);
+          console.log(res.message.content.text.text)
+        }
+      }
+    })
+
+  } catch(e) {
+    console.error('ERROR', e)
+  }
+}
+main()
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
